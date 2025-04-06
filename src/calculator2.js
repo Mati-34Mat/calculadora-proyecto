@@ -20,7 +20,7 @@ export default function Calculadora() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [input]);
 
   const handleButtonClick = (value) => {
     if (value === '=') {
