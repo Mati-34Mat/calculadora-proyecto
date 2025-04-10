@@ -1,12 +1,7 @@
-// src/App.jsx
-import CalculadoraV2 from './calculator2';
+import CalculadoraV3 from './calculator3';
 
 function App() {
-  return (
-    <div>
-      <CalculadoraV2 />
-    </div>
-  );
+  return <CalculadoraV3 />;
 }
 
-export default App;
+export default App; 
