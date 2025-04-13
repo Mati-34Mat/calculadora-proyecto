@@ -5,12 +5,24 @@ export default function CalculadoraV3() {
   const [history, setHistory] = useState([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
 
+  const isOperator = (value) => ['+', '-', '×', '÷', '*', '/'].includes(value);
+
+  const lastCharIsOperator = () => {
+    if (input.length === 0) return false;
+    const lastChar = input.slice(-1);
+    return isOperator(lastChar);
+  };
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       const key = e.key;
 
-      if (/[0-9+\-*\/().]/.test(key)) {
+      if (/[0-9.]/.test(key)) {
         setInput((prev) => prev + key);
+      } else if (isOperator(key)) {
+        if (!lastCharIsOperator()) {
+          setInput((prev) => prev + key);
+        }
       } else if (key === 'Enter' || key === '=') {
         e.preventDefault();
         calcularResultado();
@@ -22,6 +34,8 @@ export default function CalculadoraV3() {
         navigateHistory(-1);
       } else if (key === 'ArrowDown') {
         navigateHistory(1);
+      } else if (key === '(' || key === ')') {
+        setInput((prev) => prev + key);
       }
     };
 
@@ -36,6 +50,10 @@ export default function CalculadoraV3() {
       setInput('');
     } else if (value === '⌫') {
       setInput((prev) => prev.slice(0, -1));
+    } else if (isOperator(value)) {
+      if (!lastCharIsOperator()) {
+        setInput((prev) => prev + value);
+      }
     } else {
       setInput((prev) => prev + value);
     }
@@ -43,6 +61,11 @@ export default function CalculadoraV3() {
 
   const calcularResultado = () => {
     try {
+      if (lastCharIsOperator()) {
+        setInput('Error: Operador al final');
+        return;
+      }
+      
       const expresion = input.replace(/×/g, '*').replace(/÷/g, '/');
       const resultado = eval(expresion).toString();
       setHistory((prev) => {
